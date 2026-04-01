@@ -6,14 +6,22 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  // Autorise les images depuis le domaine WP actuel et Gravatar
+  // Autorise les images depuis le domaine WP, Cloudinary (n8n) et Gravatar
   images: {
     remotePatterns: [
+      // Anciennes images WordPress (servies via proxy /wp-content/)
       {
         protocol: 'https',
         hostname: 'www.edev-multimedia.com',
         pathname: '/wp-content/uploads/**',
       },
+      // Nouvelles images générées par n8n → Cloudinary
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/dypglgtjt/**',
+      },
+      // Avatars Gravatar
       {
         protocol: 'https',
         hostname: 'secure.gravatar.com',
@@ -33,7 +41,7 @@ const nextConfig: NextConfig = {
       // Polices Google Fonts
       "font-src 'self' https://fonts.gstatic.com data:",
       // Images : self, WP, Gravatar, data URIs
-      "img-src 'self' data: blob: https://www.edev-multimedia.com https://secure.gravatar.com https://www.googletagmanager.com https://www.google.com https://www.google.fr",
+      "img-src 'self' data: blob: https://www.edev-multimedia.com https://secure.gravatar.com https://res.cloudinary.com https://www.googletagmanager.com https://www.google.com https://www.google.fr",
       // Vidéos locales
       "media-src 'self'",
       // Iframes YouTube uniquement
