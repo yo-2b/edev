@@ -4,6 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Clock, Calendar, Tag as TagIcon, ArrowRight } from 'lucide-react'
 import { getPostBySlug, getAllPostSlugs, getSimilarPosts } from '@/lib/queries/posts'
+
+// Revalide les pages d'articles toutes les 24h (fallback si revalidatePath non déclenché)
+export const revalidate = 86400
 import { formatDate, stripHtml, truncate } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { TableOfContents } from '@/components/blog/TableOfContents'

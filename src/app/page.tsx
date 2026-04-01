@@ -11,6 +11,9 @@ import { stripHtml, truncate } from '@/lib/utils'
 import { AnimatedCounter } from '@/components/home/AnimatedCounter'
 import { ContactForm } from '@/components/home/ContactForm'
 
+// Revalide la homepage toutes les 3h (pour afficher les nouveaux articles automatiquement)
+export const revalidate = 10800
+
 export const metadata: Metadata = {
   title: 'Agence Web en Corse — Création Site Internet, SEO & Communication | E-Dev Multimedia',
   description:
