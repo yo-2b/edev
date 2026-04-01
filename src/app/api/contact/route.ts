@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { Resend } from 'resend'
 
 /* ── Rate limiter in-memory (5 req / min par IP) ──────────────────────────── */
 const rl = new Map<string, { count: number; resetAt: number }>()
@@ -71,15 +72,46 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const data = contactSchema.parse(body)
 
-    // 3. Forward vers n8n (décommentez et renseignez votre URL de webhook)
-    // await fetch(process.env.N8N_CONTACT_WEBHOOK_URL!, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     name: data.name, email: data.email,
-    //     subject: data.subject, message: data.message,
-    //   }),
-    // })
+    // 3. Envoi email via Resend
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
+    const htmlBody = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: #e8323c; padding: 20px; border-radius: 8px 8px 0 0;">
+          <h1 style="color: white; margin: 0; font-size: 20px;">📬 Nouveau message — E-Dev Multimedia</h1>
+        </div>
+        <div style="background: #f9f9f9; padding: 24px; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px 0; color: #666; width: 130px;">👤 Nom</td><td style="padding: 8px 0; font-weight: bold;">${data.name}</td></tr>
+            <tr><td style="padding: 8px 0; color: #666;">📧 Email</td><td style="padding: 8px 0;"><a href="mailto:${data.email}">${data.email}</a></td></tr>
+            ${data.phone ? `<tr><td style="padding: 8px 0; color: #666;">📞 Téléphone</td><td style="padding: 8px 0;">${data.phone}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; color: #666;">📌 Sujet</td><td style="padding: 8px 0;">${data.subject}</td></tr>
+          </table>
+          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 16px 0;">
+          <h3 style="color: #333; margin: 0 0 8px;">Message</h3>
+          <p style="color: #444; line-height: 1.6; white-space: pre-wrap;">${data.message}</p>
+          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 16px 0;">
+          <p style="color: #999; font-size: 12px; margin: 0;">Répondre à : <a href="mailto:${data.email}">${data.email}</a></p>
+        </div>
+      </div>
+    `
+
+    const { error } = await resend.emails.send({
+      from:    'E-Dev Multimedia <contact@edev-multimedia.com>',
+      to:      ['direction.edev@gmail.com'],
+      replyTo: data.email,
+      subject: `[E-Dev] Nouveau message de ${data.name}`,
+      html:    htmlBody,
+      text:    `De : ${data.name} (${data.email})\nSujet : ${data.subject}\n\n${data.message}`,
+    })
+
+    if (error) {
+      console.error('[CONTACT] Erreur Resend:', error)
+      return NextResponse.json(
+        { success: false, message: 'Erreur lors de l\'envoi. Réessayez.' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json(
       { success: true, message: 'Message envoyé avec succès.' },
