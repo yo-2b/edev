@@ -5,6 +5,7 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
+import { CookieBanner } from '@/components/layout/CookieBanner'
 
 const GTM_ID = 'GTM-M772FZD'
 
@@ -93,6 +94,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </main>
         <Footer />
         <Toaster position="bottom-right" richColors />
+        <CookieBanner />
         {/* Google Tag Manager */}
         <Script
           id="gtm"
