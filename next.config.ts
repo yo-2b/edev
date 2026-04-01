@@ -67,7 +67,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/wp-content/:path*',
-        destination: 'http://46.105.204.11/wp-content/:path*',
+        destination: 'https://media.edev-multimedia.com/wp-content/:path*',
       },
     ]
   },
