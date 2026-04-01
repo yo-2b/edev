@@ -11,8 +11,8 @@ import { stripHtml, truncate } from '@/lib/utils'
 import { AnimatedCounter } from '@/components/home/AnimatedCounter'
 import { ContactForm } from '@/components/home/ContactForm'
 
-// Force le rendu serveur pour toujours afficher les derniers articles
-export const dynamic = 'force-dynamic'
+// Revalide toutes les 5 minutes (pas de spinner, articles toujours frais)
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Agence Web en Corse — Création Site Internet, SEO & Communication | E-Dev Multimedia',
