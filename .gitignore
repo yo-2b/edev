@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code (IDE interne)
+.claude/
+
+# Scripts locaux uniquement (tunnel SSH, imports)
+scripts/tunnel.js
+scripts/import-wp.ts
+scripts/seed-categories.ts
+
+# Fichier image en doublon
+public/real-cerfrance..jpg

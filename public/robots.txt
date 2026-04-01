@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Bloquer les routes techniques et API
+Disallow: /api/
+Disallow: /wp-admin
+Disallow: /wp-login.php
+Disallow: /_next/
+
+# Bloquer les pages sans valeur SEO
+Disallow: /mentions-legales
+
+# Sitemap
+Sitemap: https://www.edev-multimedia.com/sitemap.xml
