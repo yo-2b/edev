@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
 import { CookieBanner } from '@/components/layout/CookieBanner'
+import { NavigationHandler } from '@/components/layout/NavigationHandler'
 
 const GTM_ID = 'GTM-M772FZD'
 
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <Toaster position="bottom-right" richColors />
         <CookieBanner />
+        <NavigationHandler />
         {/* Google Tag Manager */}
         <Script
           id="gtm"
