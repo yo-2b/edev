@@ -50,3 +50,6 @@ scripts/seed-categories.ts
 
 # Fichier image en doublon
 public/real-cerfrance..jpg
+
+# Images WP migrées — servies depuis le volume persistant Coolify
+public/wp-content/

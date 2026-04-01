@@ -6,15 +6,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  // Autorise les images depuis le domaine WP, Cloudinary (n8n) et Gravatar
+  // Autorise les images distantes — Cloudinary (n8n) et Gravatar
+  // Les images WP sont maintenant servies localement via le volume persistant
   images: {
     remotePatterns: [
-      // Anciennes images WordPress (servies via proxy /wp-content/)
-      {
-        protocol: 'https',
-        hostname: 'www.edev-multimedia.com',
-        pathname: '/wp-content/uploads/**',
-      },
       // Nouvelles images générées par n8n → Cloudinary
       {
         protocol: 'https',
@@ -66,16 +61,6 @@ const nextConfig: NextConfig = {
           { key: 'Strict-Transport-Security',  value: 'max-age=63072000; includeSubDomains; preload' },
           { key: 'Content-Security-Policy',    value: csp },
         ],
-      },
-    ]
-  },
-
-  // Proxy /wp-content/ → ancien serveur OVH (images articles WordPress)
-  async rewrites() {
-    return [
-      {
-        source: '/wp-content/:path*',
-        destination: 'https://media.edev-multimedia.com/wp-content/:path*',
       },
     ]
   },
