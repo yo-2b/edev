@@ -62,6 +62,16 @@ const nextConfig: NextConfig = {
     ]
   },
 
+  // Proxy /wp-content/ → ancien serveur OVH (images articles WordPress)
+  async rewrites() {
+    return [
+      {
+        source: '/wp-content/:path*',
+        destination: 'http://46.105.204.11/wp-content/:path*',
+      },
+    ]
+  },
+
   // Redirects SEO — 301 permanents pour éviter les 404 après migration WP → Next.js
   async redirects() {
     return [
