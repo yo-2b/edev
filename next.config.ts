@@ -27,19 +27,19 @@ const nextConfig: NextConfig = {
     const csp = [
       "default-src 'self'",
       // Scripts : self + inline (JSON-LD) + YouTube player API
-      "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com",
+      "script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net",
       // Styles : self + inline Tailwind
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Polices Google Fonts
       "font-src 'self' https://fonts.gstatic.com data:",
       // Images : self, WP, Gravatar, data URIs
-      "img-src 'self' data: blob: https://www.edev-multimedia.com https://secure.gravatar.com",
+      "img-src 'self' data: blob: https://www.edev-multimedia.com https://secure.gravatar.com https://www.googletagmanager.com https://www.google.com https://www.google.fr",
       // Vidéos locales
       "media-src 'self'",
       // Iframes YouTube uniquement
-      "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
-      // Connexions API
-      "connect-src 'self'",
+      "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.googletagmanager.com",
+      // Connexions API + Analytics
+      "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net",
       // Objets embarqués
       "object-src 'none'",
       // Upgrade HTTP → HTTPS

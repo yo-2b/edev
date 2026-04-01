@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import { Open_Sans, Inter, Geist_Mono } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
+
+const GTM_ID = 'GTM-M772FZD'
 
 /* ── Open Sans — titres display (H1…H6) ─────────────────────────────────── */
 const openSans = Open_Sans({
@@ -75,12 +78,33 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${openSans.variable} ${inter.variable} ${geistMono.variable}`}
     >
       <body className="antialiased min-h-screen flex flex-col" suppressHydrationWarning>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <Header />
         <main id="main-content" className="flex-1">
           {children}
         </main>
         <Footer />
         <Toaster position="bottom-right" richColors />
+        {/* Google Tag Manager */}
+        <Script
+          id="gtm"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }}
+        />
       </body>
     </html>
   )
