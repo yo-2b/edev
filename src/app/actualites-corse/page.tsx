@@ -81,39 +81,39 @@ export default async function ActualitesPage({ searchParams }: Props) {
         </div>
       )}
 
-      {/* ── Filtres & Recherche ─────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-10 sticky top-[104px] z-30 bg-background py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-b border-border/40">
-        {/* Category pills */}
-        <div className="flex flex-wrap gap-2">
+      {/* ── Filtres catégories ──────────────────────────────────────── */}
+      <div className="mb-10">
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60 mb-3">
+          Filtrer par thématique
+        </p>
+        <div className="flex flex-wrap gap-2 items-center">
           <Link
             href="/actualites-corse"
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
               !activeCat
                 ? 'bg-edev text-edev-foreground shadow-m3-1'
                 : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
             }`}
           >
-            Tous ({total})
+            Tous
           </Link>
-          {allCategories.map((cat) => (
+          {allCategories.filter((cat) => cat.slug !== 'actualites-corse' && (cat.count ?? 0) > 0).map((cat) => (
             <Link
               key={cat.id}
               href={`/actualites-corse?cat=${cat.slug}`}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeCat === cat.slug
                   ? 'bg-edev text-edev-foreground shadow-m3-1'
                   : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
               }`}
             >
-              {cat.name} ({cat.count})
+              {cat.name}
             </Link>
           ))}
+          <span className="text-sm text-muted-foreground ml-2">
+            {total} article{total > 1 ? 's' : ''}
+          </span>
         </div>
-
-        {/* Compteur */}
-        <p className="text-sm text-muted-foreground shrink-0">
-          {total} article{total > 1 ? 's' : ''}
-        </p>
       </div>
 
       {/* ── Article featured (page 1, sans filtre) ───────────────────── */}
