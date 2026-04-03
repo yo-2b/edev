@@ -241,6 +241,76 @@ export async function POST(req: NextRequest) {
   }
 }
 
+/* ── PATCH : mise à jour partielle (catégories, tags) sans écraser le contenu */
+export async function PATCH(req: NextRequest) {
+  if (!isAuthorized(req)) {
+    return NextResponse.json({ success: false, message: 'Non autorisé.' }, { status: 401 })
+  }
+
+  try {
+    const body = await req.json()
+    const slug = z.string().min(1).parse(body.slug)
+
+    const [post] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1)
+    if (!post) {
+      return NextResponse.json({ success: false, message: 'Article non trouvé.' }, { status: 404 })
+    }
+
+    // Mise à jour des catégories si fournies
+    if (body.categorySlugs && Array.isArray(body.categorySlugs)) {
+      await db.delete(postCategories).where(eq(postCategories.postId, post.id))
+
+      const existing = await db.select().from(categories).where(inArray(categories.slug, body.categorySlugs))
+      const existingMap = new Map(existing.map((c) => [c.slug, c]))
+      const missingSlugs = body.categorySlugs.filter((s: string) => !existingMap.has(s))
+
+      if (missingSlugs.length > 0) {
+        const newCats = await db.insert(categories).values(
+          missingSlugs.map((s: string) => ({ wpId: slugToWpId(`cat-${s}`), name: s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' '), slug: s }))
+        ).onConflictDoNothing().returning()
+        newCats.forEach((c) => existingMap.set(c.slug, c))
+      }
+
+      const rels = body.categorySlugs.map((s: string) => existingMap.get(s)).filter(Boolean).map((c: any) => ({ postId: post.id, categoryId: c.id }))
+      if (rels.length > 0) await db.insert(postCategories).values(rels).onConflictDoNothing()
+    }
+
+    // Mise à jour des tags si fournis
+    if (body.tagNames && Array.isArray(body.tagNames)) {
+      await db.delete(postTags).where(eq(postTags.postId, post.id))
+      const tagSlugs = body.tagNames.map((n: string) => n.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))
+      const existingTags = await db.select().from(tags).where(inArray(tags.slug, tagSlugs))
+      const tagMap = new Map(existingTags.map((t) => [t.slug, t]))
+      const missingTags = tagSlugs.filter((s: string) => !tagMap.has(s))
+      if (missingTags.length > 0) {
+        const newTags = await db.insert(tags).values(missingTags.map((s: string, i: number) => ({ wpId: slugToWpId(`tag-${s}`), name: body.tagNames[tagSlugs.indexOf(s)] ?? s, slug: s }))).onConflictDoNothing().returning()
+        newTags.forEach((t) => tagMap.set(t.slug, t))
+      }
+      const tagRels = tagSlugs.map((s: string) => tagMap.get(s)).filter(Boolean).map((t: any) => ({ postId: post.id, tagId: t.id }))
+      if (tagRels.length > 0) await db.insert(postTags).values(tagRels).onConflictDoNothing()
+    }
+
+    // Mise à jour du contenu si fourni (restauration)
+    if (body.content) {
+      await db.update(posts).set({
+        ...(body.content ? { content: body.content } : {}),
+        ...(body.title ? { title: body.title } : {}),
+        ...(body.excerpt ? { excerpt: body.excerpt } : {}),
+        modifiedAt: new Date(),
+      }).where(eq(posts.id, post.id))
+    }
+
+    revalidatePath(`/${slug}`)
+    revalidatePath('/')
+    revalidatePath('/actualites-corse')
+
+    return NextResponse.json({ success: true, message: 'Article mis à jour.', article: { id: post.id, slug } })
+  } catch (error) {
+    console.error('PATCH error:', error)
+    return NextResponse.json({ success: false, message: 'Erreur.' }, { status: 500 })
+  }
+}
+
 /* ── GET : health check ───────────────────────────────────────────────────── */
 export async function GET(req: NextRequest) {
   if (!isAuthorized(req)) {
