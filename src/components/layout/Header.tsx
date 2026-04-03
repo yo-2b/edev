@@ -378,12 +378,12 @@ export function Header() {
           </div>
 
           {/* Liens principaux — visibles sans scroller */}
-          <nav className="flex flex-col gap-0.5 mb-2" aria-label="Navigation mobile">
+          <nav className="flex flex-col gap-0 mb-1" aria-label="Navigation mobile">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-base font-semibold text-white/75 hover:text-white hover:bg-white/[0.06] transition-colors"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-white/75 hover:text-white hover:bg-white/[0.06] transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
                 <link.Icon className="h-4 w-4 text-edev/70" strokeWidth={1.5} />
@@ -392,30 +392,27 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="border-t border-white/[0.07] my-2" />
+          <div className="border-t border-white/[0.07] my-1" />
 
           {/* Prestations mobile — compact */}
-          <p className="mt-2 mb-1.5 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/25">
+          <p className="mt-1 mb-1 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/25">
             Nos prestations
           </p>
           <div className="flex flex-col gap-0">
-            {PRESTATIONS.map(({ label, sub, href, Icon, color }) => (
+            {PRESTATIONS.map(({ label, href, Icon, color }) => (
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/[0.06] transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
                 <div
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
                   style={{ backgroundColor: `${color}20` }}
                 >
                   <Icon className="h-3 w-3" style={{ color }} strokeWidth={1.5} />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white/80">{label}</p>
-                  <p className="text-xs text-white/35 leading-tight">{sub}</p>
-                </div>
+                <p className="text-sm font-semibold text-white/80">{label}</p>
               </Link>
             ))}
           </div>
