@@ -349,10 +349,10 @@ export function Header() {
         }`}
         style={{ backgroundColor: '#0d1020' }}
       >
-        <div className="px-4 pb-6 pt-2 max-h-[80vh] overflow-y-auto overscroll-contain">
+        <div className="relative max-h-[80vh] overflow-y-auto overscroll-contain px-4 pb-6 pt-2">
 
           {/* Contact rapide mobile */}
-          <div className="flex items-center gap-4 py-3 mb-2 border-b border-white/[0.07]">
+          <div className="flex items-center gap-4 py-2 mb-1 border-b border-white/[0.07]">
             <a href="tel:+33615778527" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white transition-colors">
               <Phone className="h-3 w-3 text-edev" /> 06.15.77.85.27
             </a>
@@ -361,61 +361,66 @@ export function Header() {
             </a>
           </div>
 
-          {/* Prestations mobile */}
-          <p className="mt-3 mb-2 px-1 text-xs font-bold uppercase tracking-[0.18em] text-white/25">
-            Prestations
-          </p>
-          <nav className="flex flex-col gap-0.5" aria-label="Navigation mobile">
-            {PRESTATIONS.map(({ label, sub, href, Icon, color }) => (
-              <Link
-                key={href}
-                href={href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.06] transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                <div
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                  style={{ backgroundColor: `${color}20` }}
-                >
-                  <Icon className="h-3.5 w-3.5" style={{ color }} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <p className="text-base font-semibold text-white/85">{label}</p>
-                  <p className="text-sm text-white/45">{sub}</p>
-                </div>
-              </Link>
-            ))}
+          {/* CTA mobile — en haut pour être toujours visible */}
+          <div className="my-3">
+            <Link
+              href="/agence-communication-corse"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white rounded-xl transition-all duration-200 active:scale-[0.98]"
+              style={{
+                background: 'linear-gradient(135deg, #e84a2f, #ff6b4a)',
+                boxShadow: '0 4px 16px rgba(232,74,47,0.3)',
+              }}
+            >
+              Demander un devis gratuit
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
 
-            <div className="my-3 border-t border-white/[0.07]" />
-
-            {/* Liens secondaires */}
+          {/* Liens principaux — visibles sans scroller */}
+          <nav className="flex flex-col gap-0.5 mb-2" aria-label="Navigation mobile">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-3 rounded-lg text-base font-semibold text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-base font-semibold text-white/75 hover:text-white hover:bg-white/[0.06] transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
+                <link.Icon className="h-4 w-4 text-edev/70" strokeWidth={1.5} />
                 {link.label}
               </Link>
             ))}
-
-            {/* CTA mobile */}
-            <div className="mt-4">
-              <Link
-                href="/agence-communication-corse"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-3.5 text-sm font-bold text-white rounded-xl transition-all duration-200 active:scale-[0.98]"
-                style={{
-                  background: 'linear-gradient(135deg, #e84a2f, #ff6b4a)',
-                  boxShadow: '0 4px 16px rgba(232,74,47,0.3)',
-                }}
-              >
-                Demander un devis gratuit
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
           </nav>
+
+          <div className="border-t border-white/[0.07] my-2" />
+
+          {/* Prestations mobile — compact */}
+          <p className="mt-2 mb-1.5 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/25">
+            Nos prestations
+          </p>
+          <div className="flex flex-col gap-0">
+            {PRESTATIONS.map(({ label, sub, href, Icon, color }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                <div
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
+                  style={{ backgroundColor: `${color}20` }}
+                >
+                  <Icon className="h-3 w-3" style={{ color }} strokeWidth={1.5} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white/80">{label}</p>
+                  <p className="text-xs text-white/35 leading-tight">{sub}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+        </div>
         </div>
       </div>
     </header>
