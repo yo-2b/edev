@@ -136,7 +136,7 @@ export function Footer() {
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-white/25 uppercase tracking-wider mb-0.5">Localisation</p>
-                <p className="text-sm text-white/50">Vescovato, Haute-Corse (20)</p>
+                <p className="text-sm text-white/50">Vescovato, Haute-Corse</p>
               </div>
               <Link
                 href="/agence-communication-corse"
