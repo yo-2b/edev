@@ -1,5 +1,6 @@
 /**
- * Temporary: strip <span style="color: #00c2ff;">...</span> from text NOT inside <a> tags.
+ * Temporary: strip ALL <span style="color: #00c2ff;">...</span> everywhere
+ * (both inside and outside <a> tags). Keeps inner text, removes the span wrapper.
  * DELETE after use.
  */
 
@@ -14,37 +15,18 @@ function isAuthorized(token: string | null): boolean {
   return token === secret
 }
 
-function stripOrphanedColorSpans(content: string): { fixed: string; count: number } {
-  // Step 1: Temporarily protect spans that ARE inside <a> tags
-  // Replace <a ...>...<span style="color: #00c2ff;">...</span>...</a> with placeholders
-  let idx = 0
-  const anchors: string[] = []
-  const protected_ = content.replace(
-    /<a\s[^>]*>[\s\S]*?<\/a>/gi,
-    (match) => {
-      anchors.push(match)
-      return `__ANCHOR_PLACEHOLDER_${idx++}__`
-    }
-  )
-
-  // Step 2: Now remove ALL <span style="color: #00c2ff;">...</span> (they're orphaned)
-  // Match various formats: with/without spaces, with/without semicolons
+function stripAllColorSpans(content: string): { fixed: string; count: number } {
+  // Remove ALL <span style="...color: #00c2ff...">...</span> everywhere
+  // (inside links, outside links — doesn't matter). Keep inner content.
   let count = 0
-  const cleaned = protected_.replace(
+  const fixed = content.replace(
     /<span\s+style\s*=\s*"[^"]*color\s*:\s*#00c2ff[^"]*"\s*>([\s\S]*?)<\/span>/gi,
     (_match, inner) => {
       count++
       return inner
     }
   )
-
-  // Step 3: Restore anchors
-  let result = cleaned
-  for (let i = 0; i < anchors.length; i++) {
-    result = result.replace(`__ANCHOR_PLACEHOLDER_${i}__`, anchors[i])
-  }
-
-  return { fixed: result, count }
+  return { fixed, count }
 }
 
 async function run(dryRun: boolean) {
@@ -58,7 +40,7 @@ async function run(dryRun: boolean) {
 
   for (const post of allPosts) {
     if (!post.content) continue
-    const { fixed, count } = stripOrphanedColorSpans(post.content)
+    const { fixed, count } = stripAllColorSpans(post.content)
     if (count > 0) {
       totalFixed += count
       details.push({ slug: post.slug, title: post.title, count })
