@@ -377,16 +377,16 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Liens principaux — visibles sans scroller */}
-          <nav className="flex flex-col gap-0 mb-1" aria-label="Navigation mobile">
+          {/* Liens principaux — en ligne pour gagner de la place */}
+          <nav className="flex items-center gap-1 mb-1" aria-label="Navigation mobile">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-white/75 hover:text-white hover:bg-white/[0.06] transition-colors"
+                className="flex flex-1 items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
-                <link.Icon className="h-4 w-4 text-edev/70" strokeWidth={1.5} />
+                <link.Icon className="h-3.5 w-3.5 text-edev/70" strokeWidth={1.5} />
                 {link.label}
               </Link>
             ))}
