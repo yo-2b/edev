@@ -98,6 +98,12 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  /* Bloque le scroll du body quand le menu mobile est ouvert */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   return (
     <header className="sticky top-0 z-50 w-full">
 
@@ -343,7 +349,7 @@ export function Header() {
         }`}
         style={{ backgroundColor: '#0d1020' }}
       >
-        <div className="px-4 pb-6 pt-2">
+        <div className="px-4 pb-6 pt-2 max-h-[80vh] overflow-y-auto overscroll-contain">
 
           {/* Contact rapide mobile */}
           <div className="flex items-center gap-4 py-3 mb-2 border-b border-white/[0.07]">
@@ -374,8 +380,8 @@ export function Header() {
                   <Icon className="h-3.5 w-3.5" style={{ color }} strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white/75">{label}</p>
-                  <p className="text-xs text-white/30">{sub}</p>
+                  <p className="text-base font-semibold text-white/85">{label}</p>
+                  <p className="text-sm text-white/45">{sub}</p>
                 </div>
               </Link>
             ))}
@@ -387,7 +393,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors"
+                className="px-3 py-3 rounded-lg text-base font-semibold text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

@@ -266,8 +266,8 @@ export default async function HomePage() {
                 Bastia · Haute-Corse · Corse du Sud · France
               </p>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold mb-5 leading-[1.05] tracking-tight">
-                Votre Agence Web<br />& Communication<br className="hidden md:block" /> en Corse
+              <h1 className="text-[2.5rem] sm:text-6xl md:text-7xl font-extrabold mb-5 leading-[1.05] tracking-tight">
+                Votre Agence Web<br /><span className="inline-block">{'& Communication'}</span><br className="hidden md:block" /> en Corse
               </h1>
 
               {/* Accroche — SEO + promesse valeur */}
